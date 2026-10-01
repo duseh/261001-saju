@@ -128,6 +128,23 @@
       line-height: 1.5;
     }
 
+    .maker-credit {
+      font-size: 0.88rem;
+      color: rgba(212, 175, 55, 0.75);
+      letter-spacing: 1.2px;
+      font-weight: 500;
+      margin-top: 2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .maker-credit::before,
+    .maker-credit::after {
+      content: '·';
+      color: rgba(212, 175, 55, 0.35);
+    }
+
     /* ==========================================================================
        Card Box Common Style
        ========================================================================== */
@@ -874,6 +891,7 @@
       <div class="brand-emblem">萬歲曆 · 四柱運勢</div>
       <h1 class="main-title">만세력 사주 & 오늘의 운세</h1>
       <p class="sub-title">전통 명리학 만세력 기반의 정밀 사주 감명과 오늘 하루를 밝히는 맞춤 운세를 확인하세요.</p>
+      <div class="maker-credit">made by 도연</div>
     </header>
 
     <!-- 1. 사주 정보 입력 섹션 -->
@@ -886,13 +904,13 @@
             <div class="input-row">
               <div class="input-col">
                 <label class="field-label" for="user-name">성명 <span class="hanja">(姓名)</span></label>
-                <input type="text" id="user-name" class="saju-input" placeholder="홍길동" maxlength="10">
+                <input type="text" id="user-name" class="saju-input" placeholder="이도연" maxlength="10">
               </div>
               <div class="input-col">
                 <label class="field-label">성별 <span class="hanja">(性別)</span></label>
                 <div class="segmented-control" id="gender-control" role="group">
-                  <button type="button" class="segmented-btn active" data-gender="M">남성 (乾命)</button>
-                  <button type="button" class="segmented-btn" data-gender="F">여성 (坤命)</button>
+                  <button type="button" class="segmented-btn" data-gender="M">남성 (乾命)</button>
+                  <button type="button" class="segmented-btn active" data-gender="F">여성 (坤命)</button>
                 </div>
               </div>
             </div>
@@ -973,7 +991,7 @@
         <div class="user-info-text">
           <div class="user-info-title">
             <span>📜</span>
-            <span id="res-user-name">홍길동</span>님의 감명 명식서
+            <span id="res-user-name">이도연</span>님의 감명 명식서
           </div>
           <div class="user-info-meta" id="res-user-meta">1995년 5월 18일 (양력) · 오시 출생 · 남성</div>
         </div>
@@ -1713,7 +1731,7 @@
     /* ==========================================================================
        5. Event Handling & State Controller
        ========================================================================== */
-    let currentGender = 'M';
+    let currentGender = 'F';
     let currentCalendar = 'solar';
 
     // 생년월일 드롭다운 초기화 (1930~2026년, 1~12월, 동적 일수 계산)
@@ -1722,22 +1740,22 @@
       const monthSelect = document.getElementById('birth-month');
       const daySelect = document.getElementById('birth-day');
 
-      // 1) 연도 (2026년 ~ 1930년 내림차순, 기본 1995년)
+      // 1) 연도 (2026년 ~ 1930년 내림차순, 기본 2000년)
       const currentYear = 2026;
       for (let y = currentYear; y >= 1930; y--) {
         const opt = document.createElement('option');
         opt.value = y;
         opt.textContent = `${y}년`;
-        if (y === 1995) opt.selected = true;
+        if (y === 2000) opt.selected = true;
         yearSelect.appendChild(opt);
       }
 
-      // 2) 월 (1월 ~ 12월, 기본 5월)
+      // 2) 월 (1월 ~ 12월, 기본 1월)
       for (let m = 1; m <= 12; m++) {
         const opt = document.createElement('option');
         opt.value = m;
         opt.textContent = `${m}월`;
-        if (m === 5) opt.selected = true;
+        if (m === 1) opt.selected = true;
         monthSelect.appendChild(opt);
       }
 
@@ -1745,7 +1763,7 @@
       function updateDaysInMonth(keepDay = null) {
         const selYear = parseInt(yearSelect.value, 10);
         const selMonth = parseInt(monthSelect.value, 10);
-        const currentSelectedDay = keepDay !== null ? keepDay : parseInt(daySelect.value, 10) || 18;
+        const currentSelectedDay = keepDay !== null ? keepDay : parseInt(daySelect.value, 10) || 1;
 
         // 해당 월의 말일 계산 (윤년 포함)
         const daysInMonth = new Date(selYear, selMonth, 0).getDate();
@@ -1766,8 +1784,8 @@
       yearSelect.addEventListener('change', () => updateDaysInMonth());
       monthSelect.addEventListener('change', () => updateDaysInMonth());
 
-      // 초기 일수 셋업 (기본 18일)
-      updateDaysInMonth(18);
+      // 초기 일수 셋업 (기본 1일)
+      updateDaysInMonth(1);
     }
 
     initBirthSelects();
@@ -1804,7 +1822,7 @@
 
     // 사주 분석 버튼 클릭 시 실행
     document.getElementById('btn-submit').addEventListener('click', () => {
-      const name = document.getElementById('user-name').value.trim() || '홍길동';
+      const name = document.getElementById('user-name').value.trim() || '이도연';
       const year = parseInt(document.getElementById('birth-year').value, 10);
       const month = parseInt(document.getElementById('birth-month').value, 10);
       const day = parseInt(document.getElementById('birth-day').value, 10);
